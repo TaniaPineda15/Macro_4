@@ -1,0 +1,264 @@
+---
+output: 
+  pdf_document:
+    includes:
+      before_body: portada4.tex
+      in_header: 
+    toc: true
+    toc_depth: 3
+  tables: true
+include-before:
+- '`\newpage{}`{=latex}'
+toc-title: Contenido
+urlcolor: blue
+header-includes:
+- \usepackage[nottoc]{tocbibind}
+- \renewcommand{\listfigurename}{Lista de figuras}
+- \renewcommand{\listtablename}{Lista de tablas}
+- \usepackage[utf8]{inputenc}
+- \usepackage[spanish]{babel}
+- \usepackage{graphicx}
+- \usepackage{float}
+- \usepackage{lscape}
+---
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.align="center", fig.pos = "H", fig.width = 7, fig.height = 3)
+
+pacman::p_load(tidyverse,
+               ggthemes,
+               haven, readxl,
+               kableExtra,
+               cowplot, ggplot2, scales, viridis, latticeExtra,
+               knitr, tinytex, reshape, lubridate, scales, reshape2,
+               clusterGeneration, xtable, rsq, psych, jtools)
+```
+
+# Ejercicio 2
+
+**Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez".**
+
+## (a)
+
+**Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+
+Para este ejercicio se recuperó la información pertinente desde julio del 2009, que provee el sitio de [Sistema de Información Económica](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=19&accion=consultarCuadro&idCuadro=CF832&locale=es) del Banco de México. A primera vista, la hoja de balance de la banca comercial en su conjunto se ve del siguiente modo:
+
+| **Activos Totales**                | **Pasivos Totales más Capital**                    |
+|----------------------------------|------------------------------------------------------|
+| A. Disponibilidades              | D. Captación                                         |
+| B. Bonos de regulación monetaria | E. Acreedores por reporto de valores                 |
+| C. Financiamiento                | F. Financiamiento Interno                            |
+|                                  | G. Financiamiento Externo                            |
+|                                  | H.  Otros pasivos netos de otros activos más capital 
+Table: 	Principales Activos y Pasivos de la Banca Comercial 
+
+
+
+Asimismo, cada uno de estos rubros pueden desglosarse más detalladamente. La mayoría de los pasivos que en la tabla se contemplan fungen como fuentes de financiamiento para las instituciones bancarias. El apartado de *Captación*, *D*, contempla tarjetas de débito, tarjetas de crédito, cuentas de nómina y otros depósitos. El apartado *Acreedores por reporto de valores, E*, es otra fuente de financiamiento y, de acuerdo con el sitio web [Rankia](https://www.rankia.co/blog/analisis-colcap/4232308-que-son-operaciones-reporto-repo), consiste en "acuerdos de recompra de activos de renta fija entre un ahorrador y el banco". Los apartados *F* y *E* son más obvias. La parte sobre el *Financiamiento Interno* contempla a los recursos proveídos por el Banco de México, la Banca Comercial residente y otros intermediarios financieros públicos. 
+
+Además, la base de datos que se mencionó al inicio divide a los pasivos de captación según su *madurez* o, en otras palabras, el plazo en que deben cumplirse tales obligaciones de financiamiento. En el siguiente cuadro se resumen esta información:
+
+\newpage
+
+| **Desglose de Pasivos**                      |                                           |                                         |                                    |
+|------------------------------------------|-------------------------------------------|-----------------------------------------|------------------------------------|
+| **D. Captación**                             | **E. Acreedores por reporto de valores**      | **F. Financiamiento Interno Recibido**      | **G. Financiamiento Externo Recibido** |
+| D.1.Sector privado no bancario residente | E.1. Sector privado no bancario residente | F.1. Banco de México                    |                                    |
+| D.2. Banca comercial                     | E.2. Banca comercial                      | F.2. Banca comercial                    |                                    |
+| D.3. Otros intmds. Financieros públicos  | E.3. Banco de México                      | F.3. Otros intmds. Financieros públicos |                                    |
+| D.4. Sector público no financiero        | E.4. Otros intmds. Financieros públicos   |                                         |                                    |
+| D.5. Sector no residente                 | E.5. Sector público no financiero         |                                         |                                    |
+|                                          | E.6. Sector no residente                  |
+
+Table: Estructura del financiamiento recibido por los bancos
+
+En las siguientes tablas se muestran algunas observaciones de los pasivos, así como el desglose de éstos en los rubros arriba mencionados. La primera tabla muestra el valor de estos pasivos en términos monetarios absolutos, mientras que la segunda tabla muestra tal valor como una proporción de los activos totales; es decir, la razón del rubro con el total. Note que para este ejercicio contamos con 153 observaciones. 
+
+```{r, results='asis'}
+base_fin_pas <- read_excel("Activos_Pasivos.xlsx", sheet = 2)
+base_fin_pas <- base_fin_pas[-c(1:8),]
+
+
+pas_gen <- as.data.frame(dplyr::select(base_fin_pas, c(1,2,3,19,26,30)))
+
+names(pas_gen) <- c("Fecha", "Pasivos Totales", "Captación", "Acreedores-Reporto", "Fin. Interno", "Fin. Externo")
+
+pas_gen$`Pasivos Totales` <- as.numeric(pas_gen$`Pasivos Totales`)
+pas_gen$Captación <- as.numeric(pas_gen$Captación)
+pas_gen$`Acreedores-Reporto` <- as.numeric(pas_gen$`Acreedores-Reporto`)
+pas_gen$`Fin. Interno` <- as.numeric(pas_gen$`Fin. Interno`)
+pas_gen$`Fin. Externo` <- as.numeric(pas_gen$`Fin. Externo`)
+
+
+pas_gen_prop <- pas_gen %>% mutate(PTot = 100*pas_gen$`Pasivos Totales` / pas_gen$`Pasivos Totales`, PCap = 100*pas_gen$Captación / pas_gen$`Pasivos Totales`, PAc = 100*pas_gen$`Acreedores-Reporto`/pas_gen$`Pasivos Totales`, PFin = 100*pas_gen$`Fin. Interno`/pas_gen$`Pasivos Totales`, PFex = 100*pas_gen$`Fin. Externo`/pas_gen$`Pasivos Totales`) %>% dplyr::select(Fecha, PTot, PCap, PAc, PFin, PFex)
+
+
+knitr::kable(headTail(pas_gen, 5,5), col.names = c("Fecha","Pasivos Totales", "Captación", "Acreedores-Reporto", "Fin. Interno", "Fin. Externo") ,format = "latex", booktabs = T, caption = "Pasivos de la Banca Comercial (Valor Absoluto) 2009-2022", align = "c") %>% kable_styling(latex_options = c("HOLD_position","scale_down"))
+
+
+knitr::kable(headTail(pas_gen_prop,5,5), col.names = c("Fecha","Pasivos Totales", "Prop. Captación", "Prop. Acreedores-Reporto", "Prop. Fin. Interno", "Prop. Fin. Externo"), format = "latex", booktabs = T, caption = "Pasivos de la Banca Comercial \n (Proporción) 2009-2022", align = "c") %>% kable_styling(latex_options = c("HOLD_position", "scale_down")) 
+
+pas_gen_prop <- pas_gen_prop[,-2]
+```
+
+Cabe mencionar que no se utilizó el apartado "Otros pasivos netos de otros activos más capital" por ser relativamente pequeño y por no estar muy bien detallado en la página del Banco. Por ello, es natural que la suma de los renglones no de 100\%.
+
+```{r fig.width=9, fig.height=4, fig.pos='H',fig.cap='Variación Absoluta (2009-2022): Pasivos Bancarios'}
+melt_df <- melt(pas_gen,id="Fecha")
+
+ggplot(melt_df,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Absoluta (2009-2022): \nPasivos Bancarios (miles de pesos)", x="Tiempo",y='Pasivos', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+
+En esta gráfica se observa un incremento importante en los pasivos de la banca comercial, pasando de un nivel de \$3,986,846,051 (miles dp)  en 2009 hasta \$9,457,989,586 (miles dp) en marzo del 2022. Es decir, los pasivos experimentaron un incremento de `r (9457989586/3986846051 - 1)*100` \%. Asimismo, se observa que, aparentemente, este incremento se debe principalmente al alza del rubro de *captación*.
+
+```{r fig.width=9, fig.height=4, fig.pos='H',fig.cap='Variación Relativa (2009-2022): Pasivos Bancarios'}
+melt_df_2 <- melt(pas_gen_prop,id="Fecha")
+
+ggplot(melt_df_2,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Proporcional (2009-2022): \nPasivos Bancarios (miles de pesos)", x="Tiempo",y='Pasivos \n(Porcentaje del Total)', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+
+En esta gráfica se observa que la proporción tanto del financiamiento interno como del externo se ha mantenido estable, sin mayores cambios en los últimos 13 años, mientras que la proporción de los acreedores por reporto de valores parece ir a la baja. Por otro lado, vemos que la proporción del rubro denominado captación se ha ido incrementando, por lo que parece ser cierto que el incremento en los pasivos se ha visto detonada (o al menos asociada) con el incremento en esta categoría.
+
+Resulta de interés ese pequeño pico dado en los primeros meses del 2020, el cual es, a toda luz, efecto de la pandemia por el COVID-19. Es decir, la banca comercial experimentó mayores flujos de financiamiento gracias al sector interno a inicios la contingencia sanitaria.
+
+## (b)
+
+**Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+
+En este incisco abordamos de manera más conciso el apartado de los activos, que en gran parte se constituyen por el financiamiento y el crédito que los bancos brindan a otras organziaciones y entidades públicas. De este modo, conviene desprender el rubro *C* y conocer mejor en qué consiste este financiamiento. 
+
+| **C. Financiamiento**                |                      |                        |
+|--------------------------------------|----------------------|------------------------|
+| **C.1.**                               | **C.2.**                 | **C.3.**                   |
+| A sectores no bancarios internos     | A la banca comercial | Al sector no residente |
+| **C.1.1.** Financiamiento directo      |                      |                        |
+| Sector privado no bancario residente |                      |                        |
+| Estados y municipios                 |                      |                        |
+| Sector público federal               |                      |                        |
+| Otros                                |
+| **C.1.2.** Títulos asociados a programas de reestructura                                |
+Table: Estructura del financiamiento otorgado por los bancos
+
+Por cuestiones prácticas, la tabla provista por el Banco de México omite detalles que conviene repasar. El financiamiento dado al sector privado no bancario residente incluye, por ejemplo, crédito para el consumo y vivienda en el caso de los hogares, préstamos y valores para las empresas y personas físicas con actividad empresarial, programa de apoyo a deudores (ADES) en el caso del sector público, entre otras muchas especificaciones,
+
+Desglosemos, entonces, la primer columna de esta tabla. Al igual que antes, lo haremos en sus versiones absolutas y relativas (proporcionales):
+
+```{r, results='asis'}
+
+base_fin_act <- read_excel("Activos_Pasivos.xlsx", sheet = 1)
+base_fin_act <- base_fin_act[-c(1:8),]
+
+act_gen <- as.data.frame(dplyr::select(base_fin_act, c(1,10,12,13,14,15,16)))
+
+names(act_gen) <- c("Fecha", "Fin.Total", "Sector.Priv", "Edos.Muns", "Sect.Pub", "Otros", "Titulos")
+
+act_gen$Fin.Total <- as.numeric(act_gen$Fin.Total)
+act_gen$Sector.Priv <- as.numeric(act_gen$Sector.Priv)
+act_gen$Edos.Muns <- as.numeric(act_gen$Edos.Muns)
+act_gen$Sect.Pub <- as.numeric(act_gen$Sect.Pub)
+act_gen$Otros <- as.numeric(act_gen$Otros)
+act_gen$Titulos <- as.numeric(act_gen$Titulos)
+
+act_gen_prop <- act_gen %>% mutate(FTot = 100*act_gen$Fin.Total/act_gen$Fin.Total, PPriv = 100*act_gen$Sector.Priv / act_gen$Fin.Total, PEdoMun = 100*act_gen$Edos.Muns / act_gen$Fin.Total, PSecPub= 100*act_gen$Sect.Pub/act_gen$Fin.Total, POtros = 100*act_gen$Otros/act_gen$Fin.Total, PTit = 100*act_gen$Titulos / act_gen$Fin.Total) %>% dplyr::select(Fecha, FTot, PPriv, PEdoMun, PSecPub, POtros, PTit)
+
+
+knitr::kable(headTail(act_gen, 5,5), col.names = c("Fecha", "Fin. Total", "Sector Privado", "Edos. y Muns.", "Sector Púb.", "Otros", "Titulos asoc. progr. reest.") ,format = "latex", booktabs = T, caption = "Financiamiento Otorgado por la Banca Comercial (Valor Absoluto) 2009-2022", align = "c") %>% kable_styling(latex_options = c("HOLD_position","scale_down"))
+
+
+knitr::kable(headTail(act_gen_prop,5,5), col.names = c("Fecha", "Fin. Total", "Prop. Sector Privado", "Prop. Edos. y Muns.", "Prop. Sector Púb.", "Prop. Otros", "Prop. Titulos"), format = "latex", booktabs = T, caption = "Financiamiento Otorgado por la Banca Comercial \n (Proporción) 2009-2022", align = "c") %>% kable_styling(latex_options = c("HOLD_position", "scale_down")) 
+
+act_gen_prop <- act_gen_prop[,-2]
+
+```
+
+Es importante aclarar que aquí sólo se tomó, como se mencionó, la primera columna del Cuadro 5. Lo anterior con la finalidad de poder ilustrar los resultados de manera clara y concisa. Además, la participación que tienen los apartados *C.1.* y *C.2.* palidece ante la importancia de todo el sector *C.1.*
+
+A continuación se muestran ambas gráficas; la primera muestra la variación absoluta del financiamiento otorgado y sus principales aristas a lo largo del tiempo, mientras que la segunda gráfica muestra la variación relativa / proporcional de dichas aristas como porcentaje del total del financiamiento otorgado.
+
+```{r fig.width=9, fig.height=4, fig.pos='H',fig.cap='Variación Absoluta (2009-2022): Financiamiento Otorgado'}
+melt_df_3 <- melt(act_gen,id="Fecha")
+
+ggplot(melt_df_3,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Absoluta (2009-2022): \nFinanciamiento Otorgado (miles de pesos)", x="Tiempo",y='Financiamiento Otorgado', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+En esta figura puede verse que el financiamiento otorgado por la banca comercial ha ido en incremento en los últimos trece años. Al parecer, esta subida es impulsada de manera importante por el crédito otorgado al sector privado, el cual contempla empresas y hogares. Por su parte, las demás categorías se han mostrado relativamente estables a lo largo del tiempo considerado aquí. El cambio porcentual del financiamiento al sector privado durante el periodo fue de `r (5102253992/1772292102-1)*100` \%.
+
+```{r fig.width=9, fig.height=4, fig.pos='H',fig.cap='Variación Relativa (2009-2022): Financiamiento Otorgado'}
+melt_df_4 <- melt(act_gen_prop,id="Fecha")
+
+ggplot(melt_df_4,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Proporcional (2009-2022): \nFinanciamiento Otorgado (miles de pesos)", x="Tiempo",y='Financiamiento Otorgado \n(Porcentaje del Total)', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+Igualmente, vemos un ligero aumento en la proporción $\frac{SectorPrivado}{Financiamiento Total}$ a lo largo del periodo. Los demás rubros se han mantenido en niveles similares, con excepción de la proporción del financiamiento al sector público, el cual ha mostrado variaciones importantes. Como lo ilustra la gráfica, éste venía cayendo desde el 2010, pero empieza a recuperarse alrededor del año 2020.
+
+Podemos, asimismo, ahondar en el concepto de del Sector Privado y analizar el financiamiento otorgado a los hogares desde el 2009:
+
+```{r}
+base_sect_priv <- read_excel("SectorPrivado.xlsx", sheet = 1)
+base_sect_priv <- base_sect_priv[-c(1:86),]
+base_sect_priv <- base_sect_priv %>% dplyr::select(1,9,10,18,21)
+base_sect_priv <- as.data.frame(base_sect_priv) 
+names(base_sect_priv) <- c("Fecha", "CarteraCredito", "CreditoConsumo", "CreditoVivienda", "CreditoEmp")
+
+base_sect_priv$CarteraCredito <- as.numeric(base_sect_priv$CarteraCredito)
+base_sect_priv$CreditoConsumo <- as.numeric(base_sect_priv$CreditoConsumo)
+base_sect_priv$CreditoVivienda <- as.numeric(base_sect_priv$CreditoVivienda)
+base_sect_priv$CreditoEmp <- as.numeric(base_sect_priv$CreditoEmp)  
+
+
+knitr::kable(headTail(base_sect_priv,5,5), col.names = c("Fecha","Cartera de Crédito","Crédito al Consumo","Crédito a la Vivienda","Crédito a Empresas"),format = "latex", booktabs = T, caption = "Financiamiento Otorgado por la Banca Comercial \n Sector Privado 2009-2022", align = "c", digits = 2) %>% kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+Asimismo, podemos analizar las proporciones que cada uno de estos tipos de crédito representa en la cartera de crédito:
+
+```{r}
+a <- base_sect_priv$CarteraCredito
+b <- base_sect_priv$CreditoConsumo
+c <- base_sect_priv$CreditoVivienda
+d <- base_sect_priv$CreditoEmp
+
+sect_priv_prop <- base_sect_priv %>% mutate(PTot = a/a*100, PCons = b/a*100, PViv = c/a*100, PEmp = d/a*100) 
+
+sect_priv_prop <- sect_priv_prop[,-c(2:5)]
+
+knitr::kable(headTail(sect_priv_prop,5,5), col.names = c("Fecha","Cartera de Crédito","Crédito al Consumo","Crédito a la Vivienda","Crédito a Empresas"),format = "latex", booktabs = T, caption = "Financiamiento Otorgado por la Banca Comercial \n Sector Privado (Proporciones, Prct) 2009-2022", align = "c", digits = 2) %>% kable_styling(latex_options = c("HOLD_position", "scale_down"))
+
+```
+
+```{r, fig.width = 7, fig.pos='H',fig.cap='Variación (2009-2022): Créditos Otorgados'}
+melt_df_5 <- melt(base_sect_priv,id="Fecha")
+
+g1 <- ggplot(melt_df_5,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Absoluta (2009-2022): \nCréditos Otorgados", x="Tiempo",y='Créditos Otorgados', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+
+sect_priv_prop <- sect_priv_prop[,-2]
+
+melt_df_6 <- melt(sect_priv_prop,id="Fecha")
+
+
+g1
+```
+```{r, fig.pos='H',fig.cap='Variación Proporcional (2009-2022): Créditos Otorgados'}
+
+ggplot(melt_df_6,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variable,group=variable)) + geom_line() + labs(title = "Variación Relativa (2009-2022): \nCréditos Otorgados (mdp)", x="Tiempo",y='Créditos Otorgados \n(Porcentaje del Total)', colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+
+Puede notarse que, por mucho, el crédito otorgado a empresas y personas físicas con actividad empresarial representa la mayor proporción del total de la cartera de crédito. Hoy, este tipo de créditos representa alrededor del 54\% de la cartera total.
+
+## (c)
+
+**Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
+
+## (d)
+
+**Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
+
+## (e)
+
+**A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
