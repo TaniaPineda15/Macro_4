@@ -34,21 +34,19 @@ header-includes:
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.align="center", fig.pos = "H", fig.width = 7, fig.height = 3)
 
 pacman::p_load(tidyverse,
-               ggthemes,
+               ggthemes, ggfortify,
                haven, readxl,
                kableExtra,
                cowplot, ggplot2, scales, viridis, latticeExtra,
-               knitr, tinytex, reshape, lubridate, scales, reshape2,
+               knitr, tinytex, reshape, siebanxicor, lubridate, scales, reshape2,
                clusterGeneration, xtable, rsq, psych, jtools)
 ```
 
-# Ejercicio 2
+### 2. Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez".**
 
-**Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez".**
+#### (a) Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.
 
-## (a)
-
-**Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+\hfill
 
 Para este ejercicio se recuperó la información pertinente desde julio del 2009, que provee el sitio de [Sistema de Información Económica](https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=19&accion=consultarCuadro&idCuadro=CF832&locale=es) del Banco de México. A primera vista, la hoja de balance de la banca comercial en su conjunto se ve del siguiente modo:
 
@@ -129,9 +127,7 @@ En esta gráfica se observa que la proporción tanto del financiamiento interno 
 
 Resulta de interés ese pequeño pico dado en los primeros meses del 2020, el cual es, a toda luz, efecto de la pandemia por el COVID-19. Es decir, la banca comercial experimentó mayores flujos de financiamiento gracias al sector interno a inicios la contingencia sanitaria.
 
-## (b)
-
-**Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+#### (b) Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
 En este incisco abordamos de manera más conciso el apartado de los activos, que en gran parte se constituyen por el financiamiento y el crédito que los bancos brindan a otras organziaciones y entidades públicas. De hecho, en la última observación de la base de datos que compete al mes de marzo de 2022, el financiamiento representa el 82\% de los activos totales. No debe sorprender, pues por definición éste es el principal propósito de una institución bancaria.  De este modo, conviene desprender el rubro *C* y conocer mejor en qué consiste este financiamiento. 
 
@@ -250,9 +246,9 @@ ggplot(melt_df_6,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variab
 
 Puede notarse que, por mucho, el crédito otorgado a empresas y personas físicas con actividad empresarial representa la mayor proporción del total de la cartera de crédito. Hoy, este tipo de créditos representa alrededor del 54\% de la cartera total.
 
-## (c)
+#### (c) Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.
 
-**Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
+\hfill
 
 Dado que sólo la información que refiere a uno de los pasivos, *captación*, está catalogada por una categoría de temporalidad (De Exigiblididad Inmediate, A Plazo), se utilizará este pasivo para analizar la transformación de madurez. Además, no es inconveniente utilizar esta variable, ya que hoy en día representa alrededor de un 71\% de los pasivos totales. Es decir, es útil para aproximar la división de pasivos a corto y largo plazo con un margen de error relativamente pequeño.
 
@@ -334,10 +330,316 @@ Como puede observarse en la figura **A**, la banca comercial se ha sustentado ca
 
 En cuanto al financiamiento otorgado, ilustrado en figura **B**, parece no haber una tendencia clara. A finales del 2009 y a principios del 2010 el financiamiento de largo plazo se iba incrementando, ganando terreno en el valor total (aunque sin predominar). Sin embargo, éste luego experimenta una caída importante en el 2014 y desde entonces parece tender al alza. Alrededor de 2021 se revierte la predominancia, y los créditos de largo plazo son ahora los que representan la mayoría de los créditos. Es decir, se observa una *transformación de madurez* sólo después del 2020, pues los bancos se están financiando bajo contratos de corto plazo al tiempo que financian proyectos de largo plazo.
 
-## (d)
+#### (d) Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.
 
-**Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
+\hfill
 
-## (e)
+#### (e) A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.
 
-**A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
+\hfill
+
+### 3. Estudie al gobierno mexicano y a los corporativos mexicanos desde el punto de vista de su endeudamiento [1 hora, 1 punto cada inciso]:
+
+\hfill
+
+#### (a) Utilice datos del SIE/Valores en Circulación y de SIE/Finanzas públi- cas del Banco de México para describir la evolución a lo largo del tiempo de la composición de la deuda del gobierno mexicano por tipo de instrumento, madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.
+
+\hfill
+
+En primer lugar se clasifica la deuda pública en interna y externa, la deuda externa está, en general, denominada en moneda extranjera, la deuda interna está denominada en su mayoría en moneda local. La deuda interna y externa puede clasificarse como de corto (menor a un año) y de largo plazo (mayor a un año). Del SIE Banxico/Balanza de Pagos puede obtenerse información acerca de la deuda externa y su madurez.
+
+```{r, echo=FALSE, fig.cap = "Deuda pública en moneda extranjera"}
+#Este código permite la descarga directa de la series del SIE BANXICO
+tkn <- '13a2eee0e4323e6b8e7583483f63bf485865b8a33de880e88e5c9c51787c89d8'
+library(siebanxicor)
+setToken(tkn)
+idSeriese<-c("SE44970", "SE44976")
+dexterna <- getSeriesData(idSeriese, "2009-01-01","2021-12-01") 
+dexterna <- as.data.frame(dexterna) %>% dplyr::rename("date" = "SE44970.date") %>% dplyr::rename ("Deuda externa a largo plazo" = "SE44976.value") %>% dplyr::rename ("Deuda externa a corto plazo" = "SE44970.value")
+
+dexterna <- dexterna[,-3]
+
+#Ahora se convierten a series de tiempo con frecuencia trimestral
+
+ts.dexterna <- ts(dexterna, freq = 4, start = c(2009.1))
+
+#Posteriormente se grafica:
+
+plot.1 <- autoplot(ts.dexterna[,2:3]) + 
+  labs(title = 'Deuda en moneda extranjera',
+       y = 'Millones de dólares',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.1
+```
+
+Se observa que la deuda en moneda extranjera a largo plazo presentó un comportamiento ascendente desde el inicio de la serie en 2009, estabilizandose a partir de 2016. El ascenso inicial puede explicarse por la etapa de bajas tasas de interés externas posterior a la crisis financiera de 2008-2009. La deuda externa a corto plazo es menor que la de largo plazo durante todo el periodo, presenta una tendencia creciente a partir de 2010, alcanzando su nivel más elevado en 2014, para descender nuevamente hasta volver a niveles cercanos a los de 2009 en 2021.
+
+La estructura de la deuda del sector público en moneda extranjera no parece generar un riesgo de impago elevado, la deuda externa a corto plazo es una proporción muy pequeña del total de la deuda externa, además, la deuda a largo plazo se ha mantenido estable desde 2016, incluso durante la pandemia de COVID-19 no muestra cambios significativos.
+
+Posteriormente se muestran las series en cambios de los logarítmos
+
+```{r, echo=FALSE, fig.cap = "Deuda pública moneda extranjera diferencias"}
+#Se transforman los datos a cambios trimestre a trimestre de los logaritmos:
+
+ds.dexterna <- as.data.frame(dexterna) %>% mutate(`Cambio en deuda externa a LP` = c(NA, diff(log(`Deuda externa a largo plazo`))), `Cambio en deuda externa a CP` = c(NA, diff(log(`Deuda externa a corto plazo`))))
+
+ts.ds.dexterna <- ts(ds.dexterna, freq = 4, start = c(2009.4))
+
+plot.2 <- autoplot(ts.ds.dexterna[,4:5]) + 
+  labs(title = 'Deuda en moneda extranjera en diferencias',
+       y = 'Tasas de cambio',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.2
+```
+Al graficar en diferencias se observa que la deuda en moneda extranjera a largo plazo tiene más variabilidad que la de corto plazo durante todo el periodo. La variación de la deuda externa alargo plazo es especialmente alta al inicio de la serie en 2009, posteriormente la variabilidad disminuye. La deuda externa a corto plazo muestra poca variabilidad. Ello podría sugerir que el Gobierno Mexicano prefiere financiarse a corto plazo en el mercado interno.
+
+A continuación se presenta un análisis similar para deuda interna, en moneda nacional:
+
+```{r, echo=FALSE, fig.cap = "Deuda interna pública"}
+#Este código permite la descarga directa de la series del SIE BANXICO
+setToken(tkn)
+idSeriesi<-c("SF110508", "SF110509")
+dinterna <- getSeriesData(idSeriesi, "2009-06-01","2021-12-01") 
+dinterna <- as.data.frame(dinterna) %>% dplyr::rename("date" = "SF110508.date") %>% dplyr::rename ("Deuda interna a corto plazo" = "SF110508.value") %>% dplyr::rename ("Deuda interna largo plazo" = "SF110509.value")
+
+dinterna <- dinterna[,-3]
+
+#Ahora se convierten a series de tiempo con frecuencia trimestral
+
+ts.dinterna <- ts(dinterna, freq = 12, start = c(2009.6))
+
+#Posteriormente se grafica:
+
+plot.3 <- autoplot(ts.dinterna[,2:3]) + 
+  labs(title = 'Deuda en moneda nacional',
+       y = 'Miles de millones de pesos',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.3
+```
+
+Se observan diferencuas muy relevantes entre la deuda interna a corto y a largo plazo, la deuda en moneda nacional a largo plazo muestra ua tendencia creciente relativamente pronunciada durante todo el periodo (junio 2009 - diciembre 2021). La deuda interna presenta una tendencia de reducción hasta mediados de 2011, posteriormente presenta un aumento moderado, después de 2020 la deuda interna también presenta una tendencia claramente creciente. En el caso de la deuda en moneda nacional se observan tendencias crecientes en la de corto y largo plazo, resulta relevante analisar las tasas a las que crece, por ello se presentan las series en diferencias de sus logartimos.
+
+```{r, echo=FALSE, fig.cap = "Deuda interna pública en diferencias"}
+#Se transforman los datos a cambios mes a mes de los logaritmos:
+
+ds.dinterna <- as.data.frame(dinterna) %>% mutate(`Cambio en deuda interna largo plazo` = c(NA, diff(log(`Deuda interna largo plazo`))), `Cambio en deuda interna a largo plazo` = c(NA, diff(log(`Deuda interna a corto plazo`))))
+
+ts.ds.dinterna <- ts(ds.dinterna, freq = 12, start = c(2009.6))
+
+plot.4 <- autoplot(ts.ds.dinterna[,4:5]) + 
+  labs(title = 'Deuda en moneda nacional en diferencias',
+       y = 'Tasas de cambio',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.4
+```
+
+De nuevo se observa una mayor variabilidad en el comportamiento de la deuda a largo plazo, en este caso en moneda nacional, se observan tasas negativas de endeudamiento a largo plazo alrededor de 2011 y tasas positivas y "elevadas" en 2020, lo que sugiere un aumento en el endeudamiento a largo plazo al inicio de la pandemia por COVID-19. La deuda interna acorto plazo presenta menor variabilidad. Es necesario observar el comportamiento en los próximos meses y años de la deuda interna a largo plazo, pues si no se estabilizara representaría un aumento en el riesgo de impago.
+
+Ahora se presenta la evolución de algunos instrumentos de deuda en moneda nacional del Gobierno Mexicano. Se entenderá por tipo de instrumento al tipo de tasa, es decir, tasa de interés fija o variable; también se considero incluir instrumentos como CETES, BONDES, BONOS y UDIBONOS, pero al tratarse de una pregunta acerca del riesgo de impago se considera de mayor relevancia incluir la clasificación por instrumentos de tasas fija y variable.
+
+```{r, echo=FALSE, fig.cap = "Deuda interna pública por tipo"}
+#Este código permite la descarga directa de la series del SIE BANXICO
+setToken(tkn)
+idSeriest<-c("SF110513", "SF110515")
+dinternat <- getSeriesData(idSeriest, "2009-06-01","2021-12-01") 
+dinternat <- as.data.frame(dinternat) %>% dplyr::rename("date" = "SF110513.date") %>% dplyr::rename ("Deuda interna a tasa fija" = "SF110513.value") %>% dplyr::rename ("Deuda interna a tasa variable" = "SF110515.value")
+
+dinternat <- dinternat[,-3]
+
+#Ahora se convierten a series de tiempo con frecuencia trimestral
+
+ts.dinternat <- ts(dinternat, freq = 12, start = c(2009.6))
+
+#Posteriormente se grafica:
+
+plot.5 <- autoplot(ts.dinternat[,2:3]) + 
+  labs(title = 'Deuda por tipo de tasa',
+       y = 'Miles de millones de pesos',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.5
+```
+
+Se observa una tendencia creciente en ambos tipos de deuda, sin embargo la deuda a tasa fija parece crecer de forma más acelerada que la deuda a tasa variable. A inicios de 2021 se observa una aceleración en el crecimiento de la deuda a tasa variable, probablemente por el inicio del ciclo de alsa en tasas. También se presentan las gráficas en tasas de cambio:
+
+```{r, echo=FALSE, fig.cap = "Deuda interna pública por tipo en diferencias"}
+#Se transforman los datos a cambios mes a mes de los logaritmos:
+
+ds.dinternat <- as.data.frame(dinternat) %>% mutate(`Cambio en deuda a tasa fija` = c(NA, diff(log(`Deuda interna a tasa fija`))), `Cambio en deuda tasa variable` = c(NA, diff(log(`Deuda interna a tasa variable`))))
+
+ts.ds.dinternat <- ts(ds.dinternat, freq = 12, start = c(2009.6))
+
+plot.6 <- autoplot(ts.ds.dinternat[,4:5]) + 
+  labs(title = 'Deuda por tipo de tasa en diferencias',
+       y = 'Tasas de cambio',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.6
+```
+
+Se observa una mayor variabilidad en la deuda interna a tasa variable, la deuda interna a tasa fija varía dentro de un rango más estrecho, pero positivo. A partir de 2021 se observan variaciones positivas y crecientes en la deuda tasa variable. De mantenerse la tendencia, ello podría representar un riesgo de impago, sobretodo al incluir los efectos de un aumento en las tasas de interés externas e internas.
+
+\hfill
+
+#### (b) Utilice datos del SIE/Valores en Circulación o para describir la com- posición a lo largo del tiempo de la deuda del del sector privado no financiero mexicano por madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.
+
+\hfill
+
+De nuevo, se clasifica la deuda privada de instituciones no financieras en moneda extranjeta (proxy deuda emitida en el exterior) y en moneda nacional (proxy deuda emitida en el mercado interno). La primera serie se encuentra en la sección de Balanza de Pagos y la segunda en la sección valores en circulación del SIE. Además se presenta sus clasificación por madurez (corto y largo plazo).
+
+```{r, echo=FALSE, fig.cap = "Deuda privada moneda extranjera"}
+#Este código permite la descarga directa de la series del SIE BANXICO
+tkn <- '13a2eee0e4323e6b8e7583483f63bf485865b8a33de880e88e5c9c51787c89d8'
+library(siebanxicor)
+setToken(tkn)
+idSeriesep<-c("SE45104", "SE45110")
+dexternap <- getSeriesData(idSeriesep, "2009-01-01","2021-12-01") 
+dexternap <- as.data.frame(dexternap) %>% dplyr::rename("date" = "SE45104.date") %>% dplyr::rename ("Deuda externa privada a largo plazo" = "SE45110.value") %>% dplyr::rename ("Deuda externa privada a corto plazo" = "SE45104.value")
+
+dexternap <- dexternap[,-3]
+
+#Ahora se convierten a series de tiempo con frecuencia trimestral
+
+ts.dexternap <- ts(dexternap, freq = 4, start = c(2009.1))
+
+#Posteriormente se grafica:
+
+plot.7 <- autoplot(ts.dexternap[,2:3]) + 
+  labs(title = 'Deuda privada moneda extranjera',
+       y = 'Millones de dólares',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.7
+```
+
+Se observa que la deuda en moneda extranjera de instituciones no financieras se emite en su mayoria a largo plazo, de 2009 a 2015 se observa un crecimiento acelerado de la deuda en moneda extranjera a largo plazo, para estabilizarse a partir de 2015. La deuda en moneda extranjera a corto plazo se ha mantenido relativamente estable presentando una ligera tendencia creciente durante todo el periodo. Posteriormente se presentan los mismos datos en diferencias de sus logaritmos:
+
+```{r, echo=FALSE, fig.cap = "Deuda privada en moneda extranjera en diferencias"}
+#Se transforman los datos a cambios trimestre a trimestre de los logaritmos:
+
+ds.dexternap <- as.data.frame(dexternap) %>% mutate(`Cambio en deuda privada en moneda extranjera a LP` = c(NA, diff(log(`Deuda externa privada a largo plazo`))), `Cambio en deuda privada en moneda extranjera a CP` = c(NA, diff(log(`Deuda externa privada a corto plazo`))))
+
+ts.ds.dexternap <- ts(ds.dexternap, freq = 4, start = c(2009.4))
+
+plot.8 <- autoplot(ts.ds.dexternap[,4:5]) + 
+  labs(title = 'Deuda privada en moneda extranjera en diferencias',
+       y = 'Tasas de cambio',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.8
+```
+Se observa una mayor variación en la deuda privada en moneda extranjera a corto plazo que a largo plazo. Al inicio de la serie la deuda privada en moneda extranjera a largo plazo presentaba una mayor variabilidad que al final de la serie.
+
+Ahora se presenta la composición en términos de mamdurez de la deuda privada no financiera emitida en el mercado doméstico mexicano.
+
+```{r, echo=FALSE, fig.cap = "Deuda privada interna"}
+#Este código permite la descarga directa de la series del SIE BANXICO
+setToken(tkn)
+idSeriesip<-c("SF110356", "SF110357")
+dinternap <- getSeriesData(idSeriesip, "2009-06-01","2021-12-01") 
+dinternap <- as.data.frame(dinternap) %>% dplyr::rename("date" = "SF110356.date") %>% dplyr::rename ("Deuda privada a corto plazo" = "SF110356.value") %>% dplyr::rename ("Deuda privada largo plazo" = "SF110357.value")
+
+dinternap <- dinternap[,-3]
+
+#Ahora se convierten a series de tiempo con frecuencia trimestral
+
+ts.dinternap <- ts(dinternap, freq = 12, start = c(2009.6))
+
+#Posteriormente se grafica:
+
+plot.9 <- autoplot(ts.dinternap[,2:3]) + 
+  labs(title = 'Deuda privada',
+       y = 'Miles de millones de pesos',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.9
+```
+Se observa que la deuda privada de instituciones no financieras a largo plazo presenta una tendencia creciente durante todo el periodo. La deuda a corto plazo no ha presentado variaciones relevantes, se ha mantenido durante le periodo que se incluye en las series. A continuación se presentan las series en diferencias de sus logarítmos.
+
+```{r, echo=FALSE, fig.cap = "Deuda privada interna en diferencias"}
+#Se transforman los datos a cambios mes a mes de los logaritmos:
+
+ds.dinternap <- as.data.frame(dinternap) %>% mutate(`Cambio en deuda privada LP` = c(NA, diff(log(`Deuda privada largo plazo`))), `Cambio en deuda privada a CP` = c(NA, diff(log(`Deuda privada a corto plazo`))))
+
+ts.ds.dinternap <- ts(ds.dinternap, freq = 12, start = c(2009.6))
+
+plot.10 <- autoplot(ts.ds.dinternap[,4:5]) + 
+  labs(title = 'Deuda privada en diferencias',
+       y = 'Tasas de cambio',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.10
+```
+Se observa una mayor variabilidad en la deuda privada a corto plazo que a largo plazo. Sin embargo el aumento mostrado por la deuda privada a largo plazo de la grafica en términos absolutos señala una tendencia creciente que no parece haberse estabilizado. Como la deuda a corto plazo es pequeña comparada con la deuda a largo plazo parece ser poco probable que las empresas mexicanas experimenten dificultades en cubrir sus obligaciones o refinanciarse, sin embargo es necesario estudiar cuidadosamente la tendencia de la deuda a largo plazo para evitar que se convierta en un problema futuro.
+
+\hfill
+
+#### (c) Describa la evolución de las cifras anteriores durante la pandemia de Covid-19, es decir entre principios de 2020 y hasta la fecha.
+
+\hfill
+
+En primer lugar se estudia la evolución de la deuda pública en moneda extranjera de corto y largo plazo a partir de 2020:
+
+```{r, echo=FALSE, fig.cap = "Deuda pública en moneda extranjera 2020-2022"}
+x <- ts(dexterna[-(1:44),], freq = 4, start = c(2020))
+plot.11 <- autoplot(x[,2:3]) + 
+  labs(title = 'Deuda pública en moneda extranjera',
+       y = 'Millones de dólares',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.11
+```
+Se observa una tendencia al alza de la deuda externa a corto plazo durante los primeros meses de la pandemia por COVID-19, posteriormente la tendencia es de descenso sostenido.
+
+En el caso de la deuda pública en moneda extranjera a largo plazo se presenta una fuerte tendencia al alza en los primeros meses de la pandemia, alcanzando un pico en el tercer trimestre de 2020 y comenzando un descenso sostenido.
+Ahora se presenta el comportamiento de la deuda privada:
+
+```{r, echo=FALSE, fig.cap = "Deuda privada en moneda extranjera 2020-2022"}
+y <- ts(dexternap[-(1:44),], freq = 4, start = c(2020))
+plot.13 <- autoplot(y[,2:3]) + 
+  labs(title = 'Deuda privada en moneda extranjera',
+       y = 'Millones de dólares',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.13
+```
+
+La deuda privada de instituciones no financieras a corto plazo presenta una tendencia decreciente a partir del inicio de la contingencia por COVID 19, posiblemente para cubrise del riesgo de impago, posteriormente presenta variaciones al alza que continuan al final del periodo (2021-IV).
+
+La deuda privada en moneda extranjera a LP presenta una tendencia creciente al inicio de la contingencia por COVID-19, posteriormente la tendencia no es clara.
+
+Ahora se presenta la tendencia en la deuda pública emitida en el país a corto y largo plazo a partir de 2020.
+
+```{r, echo=FALSE, fig.cap = "Deuda publica interna 2020-2022"}
+xx <- ts(dinterna[-(1:127),], freq = 12, start = c(2020))
+plot.15 <- autoplot(xx[,2:3]) + 
+  labs(title = 'Deuda publica interna',
+       y = 'Miles de millones de pesos',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.15
+```
+
+La serie de deuda pública interna a corto plazo muestra una tendencia creciente a partir del inicio de la pandemia por COVID-19.
+
+La deuda pública interna a largo plazo también presenta una tendencia alcista, pero con un lag de aproximadamente un trimestre respecto al inicio de la contingencia sanitaria, la tendencia continúa hasta el fin de la serie en 2022.A continuación se analiza el comportamiento de la deuda privada emitida en el mercado interno a corto y largo plazo.
+
+```{r, echo=FALSE, fig.cap = "Deuda privada interna 2020-2022"}
+yy <- ts(dinternap[-(1:127),], freq = 12, start = c(2020))
+plot.17 <- autoplot(yy[,2:3]) + 
+  labs(title = 'Deuda privada local',
+       y = 'Miles de millones de pesos',
+       x = 'Año',
+       caption = 'Fuente: Elaboración propia con datos de Banxico')
+plot.17
+```
+
+La deuda interna privada a corto plazo muestra una tendencia al alza a partir de la contingencia por COVID-19, posiblemente para poder cubrir salarios y costos fijos durante en el tiempo de cierre, posteriormente se estabiliza y comienza a descender a menores niveles que los prepandemicoshacia finales de la serie.
+
+Se obserca que la deuda privada a largo plazo desciende al inicio de la contingencia sanitaria para que, a unos meses del inicio de la pandemia inicie una tendencia de crecimiento que parece continuar al final de la serie en diciembre de 2021.
+
+En general se concluye que la deuda a corto plazo reaccionó antes, la deuda a largo plazo presenta un lag para iniciar su crecimiento, la causa probable de este fenómeno es que resulta más simple y rápido obtener financiamiento a corto plazo que a largo plazo.
