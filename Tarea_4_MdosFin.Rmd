@@ -62,7 +62,6 @@ Para este ejercicio se recuperó la información pertinente desde julio del 2009
 Table: 	Principales Activos y Pasivos de la Banca Comercial 
 
 
-
 Asimismo, cada uno de estos rubros pueden desglosarse más detalladamente. La mayoría de los pasivos que en la tabla se contemplan fungen como fuentes de financiamiento para las instituciones bancarias. El apartado de *Captación*, *D*, contempla tarjetas de débito, tarjetas de crédito, cuentas de nómina y otros depósitos. El apartado *Acreedores por reporto de valores, E*, es otra fuente de financiamiento y, de acuerdo con el sitio web [Rankia](https://www.rankia.co/blog/analisis-colcap/4232308-que-son-operaciones-reporto-repo), consiste en "acuerdos de recompra de activos de renta fija entre un ahorrador y el banco". Los apartados *F* y *E* son más obvias. La parte sobre el *Financiamiento Interno* contempla a los recursos proveídos por el Banco de México, la Banca Comercial residente y otros intermediarios financieros públicos. 
 
 Además, la base de datos que se mencionó al inicio divide a los pasivos de captación según su *madurez* o, en otras palabras, el plazo en que deben cumplirse tales obligaciones de financiamiento. En el siguiente cuadro se resumen esta información:
@@ -134,7 +133,7 @@ Resulta de interés ese pequeño pico dado en los primeros meses del 2020, el cu
 
 **Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
-En este incisco abordamos de manera más conciso el apartado de los activos, que en gran parte se constituyen por el financiamiento y el crédito que los bancos brindan a otras organziaciones y entidades públicas. De este modo, conviene desprender el rubro *C* y conocer mejor en qué consiste este financiamiento. 
+En este incisco abordamos de manera más conciso el apartado de los activos, que en gran parte se constituyen por el financiamiento y el crédito que los bancos brindan a otras organziaciones y entidades públicas. De hecho, en la última observación de la base de datos que compete al mes de marzo de 2022, el financiamiento representa el 82\% de los activos totales. No debe sorprender, pues por definición éste es el principal propósito de una institución bancaria.  De este modo, conviene desprender el rubro *C* y conocer mejor en qué consiste este financiamiento. 
 
 | **C. Financiamiento**                |                      |                        |
 |--------------------------------------|----------------------|------------------------|
@@ -254,6 +253,86 @@ Puede notarse que, por mucho, el crédito otorgado a empresas y personas física
 ## (c)
 
 **Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
+
+Dado que sólo la información que refiere a uno de los pasivos, *captación*, está catalogada por una categoría de temporalidad (De Exigiblididad Inmediate, A Plazo), se utilizará este pasivo para analizar la transformación de madurez. Además, no es inconveniente utilizar esta variable, ya que hoy en día representa alrededor de un 71\% de los pasivos totales. Es decir, es útil para aproximar la división de pasivos a corto y largo plazo con un margen de error relativamente pequeño.
+
+Por otra parte, en lo que concierne a los recursos/derechos, no hay tal subcategoría que separe por la temporalidad del activo. De esta manera, se hará un supuesto un poco fuerte: **los activos de corto plazo están representados por los créditos al consumo, los de largo plazo por los créditos a la vivienda**. Por otra parte, recordemos que estos créditos son un subconjunto del financiamiento otorgado al sector privado, el cual representa, hoy, alrededor del 65\% del total de los activos (cifra no muy alejada del 71\% arriba mencionado).^[Se hará omisión de la variable "Crédito a Empresas", ya que no se sabe qué porcentaje de los montos están destinados a proyectos de largo o de corto plazo.]
+
+
+```{r}
+fin_pas <- read_excel("Activos_Pasivos.xlsx", sheet = 2)
+fin_pas <- fin_pas[-c(1:8),]
+
+fin_pas <- as_data_frame(dplyr::select(fin_pas, c(1,3,5,6,8,9,11,12,14,15,17,18)))
+
+names(fin_pas) <- c("Fecha", "Total_Capt","SP_EI","SP_AP","Ban_Des_EI", "Ban_Des_AP", "IF_EI", "IF_AP", "SPu_EI", "SPu_AP","Ext_EI","Ext_AP")
+
+fin_pas$Total_Capt <-  as.numeric(fin_pas$Total_Capt)
+fin_pas$SP_EI <- as.numeric(fin_pas$SP_EI)
+fin_pas$SP_AP <- as.numeric(fin_pas$SP_AP)
+fin_pas$Ban_Des_EI <- as.numeric(fin_pas$Ban_Des_EI)
+fin_pas$Ban_Des_AP <- as.numeric(fin_pas$Ban_Des_AP)
+fin_pas$IF_EI <- as.numeric(fin_pas$IF_EI)
+fin_pas$IF_AP <- as.numeric(fin_pas$IF_AP)
+fin_pas$SPu_EI <- as.numeric(fin_pas$SPu_EI)
+fin_pas$SPu_AP <- as.numeric(fin_pas$SPu_AP)
+fin_pas$Ext_EI <- as.numeric(fin_pas$Ext_EI)
+fin_pas$Ext_AP <- as.numeric(fin_pas$SPu_AP)
+
+knitr::kable(headTail(fin_pas,5,5), format = "latex", booktabs=T, caption = "Captación, por plazos y acreedor del financiamiento") %>% kable_styling(latex_options = c("HOLD_position", "scale_down"))
+```
+
+En esta tabla, lo que sigue al "_" denota Exigibilidad Inmediata (EI) y A Plazo (AP). Por otra parte, los prefijos se refieren a:
+
++ `SP: Sector Privado No Bancario`
++ `Ban_Des: Banca de Desarrollo`
++ `IF: Otros Intermediarios Financieros`
++ `SPu: Sector Público No Financiero`
++ `Ext: Sector No Residente`
+
+Asimismo, conviene capturar la información por el tipo de plazo:
+
+```{r}
+ei_ap <- fin_pas %>% mutate(Total_EI = SP_EI+Ban_Des_EI+IF_EI+SPu_EI+Ext_EI, Total_AP = SP_AP+Ban_Des_AP+IF_AP+SPu_AP+Ext_AP) 
+
+ei_ap <- ei_ap %>% dplyr::select(Fecha, Total_EI, Total_AP) %>% mutate(Prop_EI = Total_EI/(Total_EI+Total_AP)*100, Prop_AP = Total_AP/(Total_EI+Total_AP)*100)
+
+knitr::kable(headTail(ei_ap,5,5), format = "latex", booktabs=T, caption = "Madurez de los Pasivos: Absoluta y Relativa", align = "c") %>% kable_styling(latex_options = c("HOLD_position"))
+```
+
+Luego, lo que queremos observar es cómo ha variado la proporción a lo largo del tiempo de los pasivos de corto plazo respecto a la de los pasivos de largo plazo: ¿Cómo ha cambiado la manera de los bancos financiarse desde el 2009?
+
+Del mismo modo, quiere analizarse el comportamiento del financiamiento que otorga en los rubros antes considerados: consumo y vivienda. ¿Los bancos prestan más a largo o a corto plazo?
+
+```{r, fig.width = 4, fig.pos='H'}
+ei_ap_2 <- ei_ap[,c(1,4,5)]
+melt_df_6 <- melt(ei_ap_2,id="Fecha")
+
+grid_1 <- ggplot(melt_df_6, aes(x=as.Date(Fecha, format = "%d/%m/%Y"), y=value ,colour=variable,group=variable))+
+  geom_line() + labs(title = "Fin. Recibido \n(Corto vs. Largo Plazo)", x="Tiempo",y = "Porcentaje", colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+
+
+```{r, fig.width = 4, fig.pos='H'}
+
+act_plazo <- base_sect_priv %>% mutate(PCorto = CreditoConsumo/(CreditoVivienda+CreditoConsumo)*100, PLar = CreditoVivienda/(CreditoVivienda+CreditoConsumo)*100)
+
+act_plazo <- act_plazo %>% dplyr::select(Fecha, PCorto, PLar)
+
+melt_df_7 <- melt(act_plazo, id="Fecha")
+
+grid_2 <- ggplot(melt_df_7, aes(x=as.Date(Fecha, format = "%d/%m/%Y"), y=value ,colour=variable,group=variable))+
+  geom_line() + labs(title = "Fin. Otorgado \n(Corto vs. Largo Plazo)", x="Tiempo",y = "Porcentaje", colour = " ") + scale_y_continuous(labels = comma) + theme_bw() 
+```
+
+
+```{r fig.pos='H', fig.width=10, fig.cap="Tipo de financiamiento (2009-2022): Corto vs Largo"}
+plot_grid(grid_1, grid_2, labels = c("A","B"))
+```
+Como puede observarse en la figura **A**, la banca comercial se ha sustentado cada vez más en las fuentes de financiamiento de corto plazo. Ahora nos queda analizar el comportamiento del financiamiento que otorga en los rubros antes considerados: consumo y vivienda. ¿Los bancos prestan más a largo o a corto plazo?
+
+
+En cuanto al financiamiento otorgado, ilustrado en figura **B**, parece no haber una tendencia clara. A finales del 2009 y a principios del 2010 el financiamiento de largo plazo se iba incrementando, ganando terreno en el valor total (aunque sin predominar). Sin embargo, éste luego experimenta una caída importante en el 2014 y desde entonces parece tender al alza. Alrededor de 2021 se revierte la predominancia, y los créditos de largo plazo son ahora los que representan la mayoría de los créditos. Es decir, se observa una *transformación de madurez* sólo después del 2020, pues los bancos se están financiando bajo contratos de corto plazo al tiempo que financian proyectos de largo plazo.
 
 ## (d)
 
