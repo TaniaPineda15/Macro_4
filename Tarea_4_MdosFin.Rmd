@@ -419,7 +419,7 @@ ts.dexterna <- ts(dexterna, freq = 4, start = c(2009.1))
 
 #Posteriormente se grafica:
 
-plot.1 <- autoplot(ts.dexterna[,2:3], colour = 'blue') + 
+plot.1 <- autoplot(ts.dexterna[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda en moneda extranjera',
        y = 'Millones de dólares',
        x = 'Año',
@@ -440,7 +440,7 @@ ds.dexterna <- as.data.frame(dexterna) %>% mutate(`Cambio en deuda externa a LP`
 
 ts.ds.dexterna <- ts(ds.dexterna, freq = 4, start = c(2009.4))
 
-plot.2 <- autoplot(ts.ds.dexterna[,4:5], colour = 'blue') + 
+plot.2 <- autoplot(ts.ds.dexterna[,4:5], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda en moneda extranjera en diferencias',
        y = 'Tasas de cambio',
        x = 'Año',
@@ -466,7 +466,7 @@ ts.dinterna <- ts(dinterna, freq = 12, start = c(2009.6))
 
 #Posteriormente se grafica:
 
-plot.3 <- autoplot(ts.dinterna[,2:3], colour = 'blue') +
+plot.3 <- autoplot(ts.dinterna[,2:3], colour = 'blue') + theme_bw() +
   labs(title = 'Deuda en moneda nacional',
        y = 'Miles de millones de pesos',
        x = 'Año',
@@ -483,7 +483,7 @@ ds.dinterna <- as.data.frame(dinterna) %>% mutate(`Cambio en deuda interna largo
 
 ts.ds.dinterna <- ts(ds.dinterna, freq = 12, start = c(2009.6))
 
-plot.4 <- autoplot(ts.ds.dinterna[,4:5], colour = 'blue') + 
+plot.4 <- autoplot(ts.ds.dinterna[,4:5], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda en moneda nacional en diferencias',
        y = 'Tasas de cambio',
        x = 'Año',
@@ -510,7 +510,7 @@ ts.dinternat <- ts(dinternat, freq = 12, start = c(2009.6))
 
 #Posteriormente se grafica:
 
-plot.5 <- autoplot(ts.dinternat[,2:3], colour = 'blue') + 
+plot.5 <- autoplot(ts.dinternat[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda por tipo de tasa',
        y = 'Miles de millones de pesos',
        x = 'Año',
@@ -527,7 +527,7 @@ ds.dinternat <- as.data.frame(dinternat) %>% mutate(`Cambio en deuda a tasa fija
 
 ts.ds.dinternat <- ts(ds.dinternat, freq = 12, start = c(2009.6))
 
-plot.6 <- autoplot(ts.ds.dinternat[,4:5], colour = 'blue') +
+plot.6 <- autoplot(ts.ds.dinternat[,4:5], colour = 'blue') + theme_bw() +
   labs(title = 'Deuda por tipo de tasa en diferencias',
        y = 'Tasas de cambio',
        x = 'Año',
@@ -564,7 +564,7 @@ ts.dexternap <- ts(dexternap, freq = 4, start = c(2009.1))
 
 #Posteriormente se grafica:
 
-plot.7 <- autoplot(ts.dexternap[,2:3], colour = 'blue') + 
+plot.7 <- autoplot(ts.dexternap[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda privada moneda extranjera',
        y = 'Millones de dólares',
        x = 'Año',
@@ -581,7 +581,7 @@ ds.dexternap <- as.data.frame(dexternap) %>% mutate(`Cambio en deuda privada en 
 
 ts.ds.dexternap <- ts(ds.dexternap, freq = 4, start = c(2009.4))
 
-plot.8 <- autoplot(ts.ds.dexternap[,4:5], colour = 'blue') + 
+plot.8 <- autoplot(ts.ds.dexternap[,4:5], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda privada en moneda extranjera en diferencias',
        y = 'Tasas de cambio',
        x = 'Año',
@@ -607,7 +607,7 @@ ts.dinternap <- ts(dinternap, freq = 12, start = c(2009.6))
 
 #Posteriormente se grafica:
 
-plot.9 <- autoplot(ts.dinternap[,2:3], colour = 'blue') + 
+plot.9 <- autoplot(ts.dinternap[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda privada',
        y = 'Miles de millones de pesos',
        x = 'Año',
@@ -623,7 +623,7 @@ ds.dinternap <- as.data.frame(dinternap) %>% mutate(`Cambio en deuda privada LP`
 
 ts.ds.dinternap <- ts(ds.dinternap, freq = 12, start = c(2009.6))
 
-plot.10 <- autoplot(ts.ds.dinternap[,4:5], colour = 'blue') + 
+plot.10 <- autoplot(ts.ds.dinternap[,4:5], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda privada en diferencias',
        y = 'Tasas de cambio',
        x = 'Año',
@@ -644,7 +644,7 @@ En primer lugar se estudia la evolución de la deuda pública en moneda extranje
 
 ```{r, echo=FALSE, fig.cap = "Deuda pública en moneda extranjera 2020-2022"}
 x <- ts(dexterna[-(1:44),], freq = 4, start = c(2020))
-plot.11 <- autoplot(x[,2:3], colour = 'blue') + 
+plot.11 <- autoplot(x[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda pública en moneda extranjera',
        y = 'Millones de dólares',
        x = 'Año',
@@ -658,7 +658,7 @@ Ahora se presenta el comportamiento de la deuda privada:
 
 ```{r, echo=FALSE, fig.cap = "Deuda privada en moneda extranjera 2020-2022"}
 y <- ts(dexternap[-(1:44),], freq = 4, start = c(2020))
-plot.13 <- autoplot(y[,2:3], colour = 'blue') +
+plot.13 <- autoplot(y[,2:3], colour = 'blue') + theme_bw() +
   labs(title = 'Deuda privada en moneda extranjera',
        y = 'Millones de dólares',
        x = 'Año',
@@ -674,7 +674,7 @@ Ahora se presenta la tendencia en la deuda pública emitida en el país a corto 
 
 ```{r, echo=FALSE, fig.cap = "Deuda publica interna 2020-2022"}
 xx <- ts(dinterna[-(1:127),], freq = 12, start = c(2020))
-plot.15 <- autoplot(xx[,2:3], colour = 'blue') + 
+plot.15 <- autoplot(xx[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda publica interna',
        y = 'Miles de millones de pesos',
        x = 'Año',
@@ -688,7 +688,7 @@ La deuda pública interna a largo plazo también presenta una tendencia alcista,
 
 ```{r, echo=FALSE, fig.cap = "Deuda privada interna 2020-2022"}
 yy <- ts(dinternap[-(1:127),], freq = 12, start = c(2020))
-plot.17 <- autoplot(yy[,2:3], colour = 'blue') + 
+plot.17 <- autoplot(yy[,2:3], colour = 'blue') + theme_bw() + 
   labs(title = 'Deuda privada local',
        y = 'Miles de millones de pesos',
        x = 'Año',
