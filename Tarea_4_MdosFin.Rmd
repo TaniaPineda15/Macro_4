@@ -334,9 +334,47 @@ En cuanto al financiamiento otorgado, ilustrado en figura **B**, parece no haber
 
 \hfill
 
+Por un lado, el financiamiento de captación inmediata ha ido creciendo a lo largo
+del tiempo y el de largo plazo ha ido disminuyendo.
+
+Por otro lado, se observa que el crédito a largo plazo ha ido aumentando aproximadamente por 2013. Al mismo tiempo se observa una caída del crédito a corto plazo y un cruce de las tendencias pasado 2020. Esto nos dice que se ha dedicado más de la liquidez para financiar créditos a largo plazo y cada vez menos a corto plazo.
+
+De está forma se observa que la banca está llevando a cabo la transformación de madurez, es decir, convierte activos líquidos en otros menos líquidos en el largo plazo. De está manera es consistente con el modelo Diamond-Dybvig.
+
+Ahora, cómo se observa, más del 70% del financiamiento es en su mayoría de fuentes de corto plazo. Si estás fuentes son en su mayoría son de disponibilidad inmediata podemos esperar que el sistema financiero mexicano sea sensible a choques macroeconómicos moderados.
+
 #### (e) A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.
 
 \hfill
+
+Se consideraron los datos trimestrales del PIB y del Crédito Hipotecario del período de 2013 a 2021 a precios de 2013. Los datos del PIB se obtuvieron del BIE del INEGI. Para calcular la proporción de las hipotecas en proporción del PIB se calculó el cociente de las de los valores de las hipotecas entre el PIB. Los resultados se muestrán en la siguiente gráfica. Se observa un crecimiento notable de esta proporción, hay un estrecho repunte en 2020 que puede ser explicado por la caída del PIB debido a la pandemia.
+
+```{r, fig.pos='H',fig.cap='Crédito hipotecario como proporción del PIB'}
+library(inegiR)
+library(ggplot2)
+library(ggfortify)
+
+key<-"fd28a810-4c45-535f-c772-1e81326545e0"
+
+datos <- read.csv("vivienda.csv",sep = "\t")
+vivienda <- ts(datos$SF235716,start = c(2003, 1), frequency = 12)
+dat_vivienda <- aggregate(vivienda, nfrequency=4, mean)
+dat_vivienda <- window(dat_vivienda,start=2003, end=c(2021,4))
+
+pib <- inegi_series(493911,token = key,)
+dat_pib <- ts(rev(pib$values),start = c(1980, 1), frequency = 4)
+dat_pib <- window(dat_pib,start=2003, end=c(2021,4))
+
+
+dat_prop <- dat_vivienda/dat_pib
+
+autoplot(dat_prop,ts.colour = "red") +
+  labs(title = "Crédito hipotecario como proporción del PIB",
+       subtitle = "(2003-2021)",
+       x="Tiempo",y='Proporción',) +
+  theme_bw()
+
+```
 
 ### 3. Estudie al gobierno mexicano y a los corporativos mexicanos desde el punto de vista de su endeudamiento [1 hora, 1 punto cada inciso]:
 
