@@ -39,12 +39,16 @@ pacman::p_load(tidyverse,
                kableExtra,
                cowplot, ggplot2, scales, viridis, latticeExtra,
                knitr, tinytex, reshape, siebanxicor, lubridate, scales, reshape2,
-               clusterGeneration, xtable, rsq, psych, jtools)
+               clusterGeneration, xtable, rsq, psych, jtools, inegiR, siebanxicor)
 ```
 
-### 2. Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez".**
+# Ejercicio 2. 
 
-#### (a) Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.
+**Estudie el financiamiento del sistema bancario en México a la luz del concepto de "transformación de madurez".**
+
+## (a) 
+
+**Obtenga, del SIE/Financiamiento e información financiera de intermediarios financieros/ del Banco de México, información de las formas de financiamiento del sector bancario (comercial) mexicano, y haga gráficas describiendo la evolución en el tiempo de las distintas tipos de financiamiento (depósitos a la vista, financiamiento de mercado y otros) y de la proporción que cada uno representa del total. Es decir, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
 \hfill
 
@@ -127,7 +131,9 @@ En esta gráfica se observa que la proporción tanto del financiamiento interno 
 
 Resulta de interés ese pequeño pico dado en los primeros meses del 2020, el cual es, a toda luz, efecto de la pandemia por el COVID-19. Es decir, la banca comercial experimentó mayores flujos de financiamiento gracias al sector interno a inicios la contingencia sanitaria.
 
-#### (b) Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
+## (b) 
+
+**Obtenga de la misma fuente información del tipo de créditos que el sistema bancario (comercial) mexicano otorga, y haga gráficas describiendo la evolución en el tiempo de distintos tipos de crédito y de la proporción que cada uno representa del total. Al igual que en el inciso anterior, hay que producir dos gráficas de series de tiempo en la que el valor total está constituido por varias partes intermedias.**
 
 En este incisco abordamos de manera más conciso el apartado de los activos, que en gran parte se constituyen por el financiamiento y el crédito que los bancos brindan a otras organziaciones y entidades públicas. De hecho, en la última observación de la base de datos que compete al mes de marzo de 2022, el financiamiento representa el 82\% de los activos totales. No debe sorprender, pues por definición éste es el principal propósito de una institución bancaria.  De este modo, conviene desprender el rubro *C* y conocer mejor en qué consiste este financiamiento. 
 
@@ -246,7 +252,9 @@ ggplot(melt_df_6,aes(x=as.Date(Fecha, format = "%d/%m/%Y"),y=value,colour=variab
 
 Puede notarse que, por mucho, el crédito otorgado a empresas y personas físicas con actividad empresarial representa la mayor proporción del total de la cartera de crédito. Hoy, este tipo de créditos representa alrededor del 54\% de la cartera total.
 
-#### (c) Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.
+## (c)
+
+**Explique si los datos son consistentes con la hipótesis de que los bancos hacen transformación de madurez o si no lo son y por qué. Para ello posiblemente tenga que hacer supuestos (razonables) o buscar información adicional acerca de la madurez de los distintos tipos de financiamiento y crédito otorgado.**
 
 \hfill
 
@@ -330,7 +338,9 @@ Como puede observarse en la figura **A**, la banca comercial se ha sustentado ca
 
 En cuanto al financiamiento otorgado, ilustrado en figura **B**, parece no haber una tendencia clara. A finales del 2009 y a principios del 2010 el financiamiento de largo plazo se iba incrementando, ganando terreno en el valor total (aunque sin predominar). Sin embargo, éste luego experimenta una caída importante en el 2014 y desde entonces parece tender al alza. Alrededor de 2021 se revierte la predominancia, y los créditos de largo plazo son ahora los que representan la mayoría de los créditos. Es decir, se observa una *transformación de madurez* sólo después del 2020, pues los bancos se están financiando bajo contratos de corto plazo al tiempo que financian proyectos de largo plazo.
 
-#### (d) Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.
+## (d)
+
+**Explique qué implica la evolución de las formas de financiamiento y los tipos de crédito otorgados que observó en los incisos anteriores para la estabilidad del sistema financiero a la luz del modelo Diamond-Dybvig.**
 
 \hfill
 
@@ -343,7 +353,9 @@ De está forma se observa que la banca está llevando a cabo la transformación 
 
 Ahora, cómo se observa, más del 70% del financiamiento es en su mayoría de fuentes de corto plazo. Si estás fuentes son en su mayoría son de disponibilidad inmediata podemos esperar que el sistema financiero mexicano sea sensible a choques macroeconómicos moderados.
 
-#### (e) A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.
+## (e) 
+
+**A propósito, documente el incremento dramático a lo largo del tiempo en el crédito hipotecario como proporción del PIB.**
 
 \hfill
 
@@ -376,11 +388,15 @@ autoplot(dat_prop,ts.colour = "red") +
 
 ```
 
-### 3. Estudie al gobierno mexicano y a los corporativos mexicanos desde el punto de vista de su endeudamiento [1 hora, 1 punto cada inciso]:
+# Ejercicio 3. 
+
+**Estudie al gobierno mexicano y a los corporativos mexicanos desde el punto de vista de su endeudamiento:**
 
 \hfill
 
-#### (a) Utilice datos del SIE/Valores en Circulación y de SIE/Finanzas públi- cas del Banco de México para describir la evolución a lo largo del tiempo de la composición de la deuda del gobierno mexicano por tipo de instrumento, madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.
+## (a)
+
+**Utilice datos del SIE/Valores en Circulación y de SIE/Finanzas públi- cas del Banco de México para describir la evolución a lo largo del tiempo de la composición de la deuda del gobierno mexicano por tipo de instrumento, madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.**
 
 \hfill
 
@@ -523,7 +539,9 @@ Se observa una mayor variabilidad en la deuda interna a tasa variable, la deuda 
 
 \hfill
 
-#### (b) Utilice datos del SIE/Valores en Circulación o para describir la com- posición a lo largo del tiempo de la deuda del del sector privado no financiero mexicano por madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.
+## (b) 
+
+**Utilice datos del SIE/Valores en Circulación o para describir la com- posición a lo largo del tiempo de la deuda del del sector privado no financiero mexicano por madurez y moneda. Señale la implicación de lo que encuentre para el riesgo de impago.**
 
 \hfill
 
@@ -616,7 +634,9 @@ Se observa una mayor variabilidad en la deuda privada a corto plazo que a largo 
 
 \hfill
 
-#### (c) Describa la evolución de las cifras anteriores durante la pandemia de Covid-19, es decir entre principios de 2020 y hasta la fecha.
+## (c) 
+
+**Describa la evolución de las cifras anteriores durante la pandemia de Covid-19, es decir entre principios de 2020 y hasta la fecha.**
 
 \hfill
 
