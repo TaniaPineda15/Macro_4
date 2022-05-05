@@ -304,7 +304,7 @@ ei_ap <- ei_ap %>% dplyr::select(Fecha, Total_EI, Total_AP) %>% mutate(Prop_EI =
 knitr::kable(headTail(ei_ap,5,5), format = "latex", booktabs=T, caption = "Madurez de los Pasivos: Absoluta y Relativa", align = "c") %>% kable_styling(latex_options = c("HOLD_position"))
 ```
 
-Luego, lo que queremos observar es cómo ha variado la proporción a lo largo del tiempo de los pasivos de corto plazo respecto a la de los pasivos de largo plazo: ¿Cómo ha cambiado la manera en que se financian ñps bancos desde el 2009?
+Luego, lo que queremos observar es cómo ha variado la proporción a lo largo del tiempo de los pasivos de corto plazo respecto a la de los pasivos de largo plazo: ¿Cómo ha cambiado la manera en que se financian los bancos desde el 2009?
 
 Del mismo modo, quiere analizarse el comportamiento del financiamiento que otorga en los rubros antes considerados: consumo y vivienda. ¿Los bancos prestan más a largo o a corto plazo?
 
