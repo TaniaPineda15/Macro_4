@@ -701,3 +701,20 @@ La deuda interna privada a corto plazo muestra una tendencia al alza a partir de
 Se obserca que la deuda privada a largo plazo desciende al inicio de la contingencia sanitaria para que, a unos meses del inicio de la pandemia inicie una tendencia de crecimiento que parece continuar al final de la serie en diciembre de 2021.
 
 En general se concluye que la deuda a corto plazo reaccionó antes, la deuda a largo plazo presenta un lag para iniciar su crecimiento, la causa probable de este fenómeno es que resulta más simple y rápido obtener financiamiento a corto plazo que a largo plazo.
+
+# Ejercicio 4. 
+
+**Proponga una mejora al archivo Diccionario de Economía utilizando github.**
+Sugerimos adiciones de términos al diccionario, las cuales anunciaremos a continuación: 
+
+**INFORMACIÓN ASIMÉTRICA**: en un mercado perfecto, compradores y vendedores tienen la misma información, logrando acordar un precio justo en una operación de compraventa. Sin embargo, cuando una de las partes tiene más información que la otra sobre el producto o servicio de la compraventa, se le denomina *información asimétrica*.
+Cuando esta situación se produce, impide a una de las partes tomar la mejor decisión, ya que se encuentra en una situación de incertidumbre que puede generar un resultado ineficiente en el mercado.  Este problema se encuentra en distintos ámbitos de la actividad económico como los de inversión, finanzas o consumo.
+
+**ARBITRAJE**: Práctica que consiste en comprar un bien donde resulta más barato y venderlo en otro mercado (geográfico) donde su precio es mayor. Como consecuencia de esta práctica a nivel internacional –y a similitud del “principio de los vasos comunicantes” de la física-, el precio del bien en los distintos mercados tiende a nivelarse.
+
+**BURBUJA FINANCIERA**: Fenómeno económico que consiste en el aumento desproporcionado del precio de algún producto o activo, separándose de su valor fundamental. También se le conoce como burbuja económica, burbuja de mercado o burbuja especulativa. 
+Esta rápida expansión del precio del activo está basada en un aumento de las expectativas de rentabilidad, lo que impulsa el incremento de la inversión, la entrada de capitales al mercado en cuestión y con ello a la valoración de los activos, lo que finalmente ocasiona una sobreinversión en el sector y conduce finalmente a su derrumbe.
+
+**BASE MONETARIA**: Esta constituida por todo el dinero legal en circulación (es decir, billetes y monedas), sumado a las reservas de los bancos comerciales en el banco central. En otras palabras, es el dinero legal emitido por el Banco Central de un país y puede estar en manos del público, o en la caja de los distintos bancos comerciales del sector financiero del país. La base monetaria es monitoreada por el banco central y constituye su principal vía para controlar la oferta monetaria.
+Con base en datos del Banco de México, en nuestro país, el comportamiento de la base monetaria es muy similar al de los billetes y monedas en circulación debido a que, en general, los bancos no intentan mantener saldos positivos en sus cuentas en el instituto emisor. 
+
