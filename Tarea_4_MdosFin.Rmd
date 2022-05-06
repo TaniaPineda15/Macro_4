@@ -41,6 +41,137 @@ pacman::p_load(tidyverse,
                knitr, tinytex, reshape, siebanxicor, lubridate, scales, reshape2,
                clusterGeneration, xtable, rsq, psych, jtools, inegiR, siebanxicor)
 ```
+# Instrucciones
+
+Realice los siguientes ejercicios con el equipo señalado.
+
+# Ejercicio 1
+
+Resuelva los ejercicios 10.4 y 10.5 (5a edición). Realice estos con ayuda de su laboratorista y entregue las soluciones escritas a máquina, utilizando
+LaTeX. [1 hora, 1 punto cada pregunta] 
+
+**Romer 10.4
+Un enfoque más simple para los costos de agencia: compromiso limitado. (Lacker y Weinberg, 1989; Holmström y Tirole, 1998) Considere el modelo de la Sección 10.2 con una fricción diferente: no hay costo de verificar la producción, pero el empresario puede ocultar la fracción $1-f$ de la producción del proyecto al inversionista (con $0 \geq f \geq 1$). Por lo tanto, el emprendedor solo puede prometer de manera creíble pagar la fracción f de la producción del proyecto.** 
+
+## a) 
+**Considere un proyecto con el pago esperado $\gamma$ que excede $1 + r$. ¿Cuál es la condición para llevar a cabo el proyecto?**
+
+El modelo asume 4 cosas: 1) La producción del proyecto $(X)$ se distribuye uniformemente sobre [0; 2$\gamma$], 2) El valor esperado de la produccion $E(x)=\gamma$, 3) El empresario y los inversores son neutrales al riesgo, 4) Existe una tecnología sin riesgo o información asimétrica que produce una tasa de retorno de r con seguridad, y 5) Los inversores externos son competitivos. 
+
+El proyecto sera deseable socialmente si $\gamma>1+r$, como supone el problema. 
+
+El empresario realizara el proyecto si la ganancia de este ($\gamma$) menos el pago al inversionista (R(D)) es mayor al escenario de invertir su riqueza (W) a una tasa r en otro proyecto, es decir:
+$$ \gamma - R(D)>(1+r)W $$
+$$ R(D) \leq \gamma - (1+r)W$$
+De esta condicion se obtiene nuestro supuesto $\gamma>1+r$, por lo tanto, sabemos que el empresario realizara el proyecto.
+$$ \Rightarrow \gamma-(1-r)+(1+r)W > (1+r)W$$
+$$ \Rightarrow \gamma - (1-r)> 0$$
+$$ \Rightarrow \gamma> (1+r)$$
+
+Asimismo, al igual que el empresario, el inversionista aceptara el proyecto si los rendimientos esperados  son al menos el valor de sus pagos esperado si invirtiera en otro proyecto a una tasa r: 
+$$ R(D)\geq (1-W)(1+r)$$ 
+El punto en el que se maximiza la funcion de rendmientos esperados del inversor es en 2$\gamma$-c (donde 2$\gamma$ es la producción máxima posible del proyecto por la distribución supuesta, y c es el costo de verificación); en nuestro caso el punto máximo de esta función es 2$\gamma f$, pues supusimos que $c=0$ y se nos plantea que sólo la fracción $\gamma$f se puede pagar. 
+Con base en la ecuacion 10.8 del Romer, el rendimiento maximo esperado por el inversionista es: 
+$$ R^{MAX} = R(2\gamma f -c) \Rightarrow \left[ \frac{2\gamma f-c}{2\gamma f}\right]^2 \gamma f \Rightarrow \left[\frac{2\gamma f}{2\gamma f}\right]^2 \gamma f \Rightarrow \gamma f$$
+Por lo tanto, 
+$$R^{MAX}= \gamma f \geq (1-W)(1+r)$$
+
+De ambas condiciones, podemos ver que el proyecto se realizara si se cumple lo siguiente:
+$$ (1-W)(1+r) \leq R(D) \leq \gamma - (1+r)W$$ Con $$R^{MAX}= \gamma f$$
+
+## b) 
+**Suponga que la condición que encontró en la parte (a) se satisface con una desigualdad estricta.**
+
+Ahora que nos aseguramos que el proyecto será llevado a cabo, tenemos que definir el pago realizado al inversionista en funcion de los resultados del proyecto, es decir, los valores que tomara nuestra variable R(D). 
+De nuestro inciso anterior denotamos a X como la produccion del proyecto, ahora definiremos a $\hat{X}$ como el producto reportado, donde $\hat{X}$= fX. Asimismo, por el inciso a) sabemos que $\hat{X}$~ U(0,2f$\gamma$)
+
+El valor de nuestra R(D), esta en funcion de dos escenarios. 
+
+El primer caso, cuando D es menor o igual que la produccion maxima (2f$\gamma$), en este caso obtenemos una utilidad esperada, pues hay dos opciones: la probabilidad de que la produccion sea mayor o igual que D, donde el inversionista recibira la cantidad D, o la probabilidad de que la produccion sea menor que D, donde el inversionista recibira todo la produccion. 
+
+El segundo caso, cuando D es mayor a la produccion maxima, donde en este caso recibira toda la produccion, ya que el ingreso del proyecto siempre sera menor a D. 
+
+Construyendo estos casos de forma matematica tenemos:
+
+Caso 1: 
+$$E(D \leq 2f\gamma) = E(\hat{X}| \hat{X} \leq D)P(\hat{X} \leq D) + E(D)| \hat{X}>D)P(\hat{X} \geq D)$$
+$$\Rightarrow \frac{D}{2}\frac{D}{2f\gamma} + D\frac{2f\gamma - D}{2f\gamma} \Rightarrow \frac{D^2}{4f\gamma} + D\left( 1- \frac{D}{2f\gamma}\right) \Rightarrow D- D\frac{D^2}{4f\gamma}$$ 
+$$ \Rightarrow E(D< 2f\gamma)= D\left(1-\frac{D}{4f\gamma}\right)$$ 
+
+Caso 2:
+D > 2f$\gamma$, en este caso se le paga al inversionista la proporcion de la produccion que se prometio pagar: (f $\gamma$), que por el inciso anterior sabemos que es el rendimiento maximo que puede obtener el inversionista.
+
+En resumen tenemos que el rendimiento del inversionista puede ser el siguiente:
+
+\begin{equation}
+	\label{eq:aqui-le-mostramos-como-hacerle-la-llave-grande}
+	R(D) = \left\{
+	\begin{array}{ll} 
+		D\left(1- \frac{D}{4f\gamma}\right) \hspace{1cm} \mathrm{D\leq2f\gamma} \\
+		f\gamma \hspace{2.6cm}  \mathrm{D>2f\gamma}
+	\end{array}
+	\right.
+\end{equation} 
+
+Nota: Esta $R^{MAX}$ tambien se puede obtener derivando el caso uno, $R'(D) \Rightarrow 2f\gamma = D^*$ y sustituyendo la D* optima encontrada en la funcion: $D\left(1- \frac{D}{4f\gamma}\right)$, obteniendo que $R(D^*) = R^{MAX}= f\gamma$  
+
+Analizando la $R^{MAX}$ podemos concluir 3 cosas:
+
+1. Si $R^{MAX}$<(1+r)(1-W) el inversionista no le presta a la empresa
+
+2. Si $R^{MAX}$=(1+r)(1-W) habra varios valores de D que puedan otorgar este pago minimo requerido. Sin embargo, en el equilibrio competitivo, sera la D minima la que define este rendimiento, por el caso dos sabemos que esta D=2f$\gamma$, es cuando el pago esperado es menor a la produccion maxima del proyecto, $R^{MAX}= f\gamma$.
+
+3. Si $R^{MAX}$>(1+r)(1-W) hay un valor unico de D, que le otorga al inversionista su pago minimo requerido. Es en este caso donde el contraro es unico. 
+
+## c) 
+**La capacidad de compromiso limitada conduce a la ineficiencia (en relación con el caso en que no hay fricciones) si** $\gamma>1+r$ **pero el proyecto no se lleva a cabo. Describa si cada uno de los siguientes puede hacer que un proyecto con** $\gamma> 1 + r$ **no se lleve a cabo:**
+
+i) Una caída en la riqueza del emprendedor, W.
+
+Si W cae, la condicion (1+r)(1-W) aumenta, lo que podria generar que $R^{MAX}$<(1+r)(1-W) y por lo tanto, que no se lleve a cabo el proyecto 
+
+ii) Un aumento en la fracción del proyecto que el empresario puede ocultar, 1-f (es decir, una caída en f). 
+
+Sabemos que $R^{MAX}$ = f$\gamma$, por lo que si f disminuye f$\gamma$ cae, lo que puede generar que $R^{MAX}$<(1+r)(1-W) y por lo tanto, que no se lleve a cabo el proyecto 
+
+iii) Un aumento en el riesgo idiosincrásico. Concretamente, suponga que, la producción del proyecto se distribuye uniformemente en $[\gamma-b, \gamma+b]$ en lugar de uniformemente en $[0, 2\gamma]$, y hay un aumento en b.
+
+Ahora tenemos que $X~U(\gamma-b, \gamma+b)$ y por lo tanto, $\hat{X}= fX~ U(f(\gamma-b), f(\gamma+b))^2$ 
+
+Con esta informacion obtenemos 
+$$  F_{\hat{X}} (x) = \frac{x}{f(\gamma +b)- f(\gamma -b)} =\frac{x}{2fb}$$
+
+Si D $\leq$ f($\gamma$-b), la empresa le paga a la inversionista D con probabilidad 1. 
+
+Si f($\gamma$-b) < D $\leq$ f($\gamma$+b), tenemos dos casos, como en el primer inciso: la probabilidad de que la produccion ($\hat{X}$) sea mayor o igual que D, donde el inversionista recibira la cantidad D, o la probabilidad de que la produccion sea menor que D, donde el inversionista recibira toda la produccion. 
+
+$$E(D \leq 2f\gamma) = E(\hat{X}| \hat{X} \leq D)P(\hat{X} \leq D) + E(D)| \hat{X}>D)P(\hat{X} \geq D)$$
+$$\Rightarrow \frac{f(\gamma-b + D)}{2} \frac{D}{2fb} + D\frac{2fb-D}{2fb} \Rightarrow \frac{D}{4fb} (f\gamma + 3fb -D)$$
+$$ E(D \leq 2f\gamma) = D\left(\frac{3}{4} + \frac{f\gamma -D}{4fb}\right)$$
+
+En resumen tenemos que el rendimiento del inversionista en este nuevo caso puede ser el siguiente:
+
+\begin{equation} 
+	R(D) = \left\{
+	\begin{array}{ll} 
+		D\left(\frac{3}{4} +\frac{f\gamma -D}{4fb}\right) \hspace{1cm} \mathrm{f(\gamma-b)< D \leq f(\gamma+b)} \\
+		D \hspace{3.1cm}  \mathrm{ D \leq f (\gamma-b)}
+	\end{array}
+	\right.
+\end{equation} 
+
+Ante un aumento de b, no se cancelaria el proyecto, quiza solo en el caso donde D=f($\gamma$-b), ante el cambio de b a b' (con b'<b) D pasaria a ser mayor a f($\gamma$-b') cambiando solo los rendimientos que recibiria el inversionista. Sin embargo, este aumento de b tambien aumenta el nivel maximo de produccion, lo que implica que si antes D<f($\gamma$ +b), ahora el proyecto resultaria socialmente deseable. 
+
+\pagebreak 
+
+**Romer 10.5**
+
+## a) 
+**Demuestre que en el modelo analizado en las ecuaciones (10.15)-(10.23) de la sección 10.4,las distribuciones incondicionales de** $C_{2t}^{a}$ y  $C_{2t}^{n}$ **no son normales.**
+
+
+## b) 
+**Explique en una oración o dos por qué el análisis del texto, que usa las propiedades de las distribuciones lognormales, es correcto.**
 
 # Ejercicio 2. 
 
